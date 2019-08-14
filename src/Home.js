@@ -12,10 +12,10 @@ import Grid from '@material-ui/core/Grid';
 const styles = (theme) => ({
   textBox: {
     textAlign: 'center',
-    paddingTop: theme.spacing.unit * 5,
+    paddingTop: theme.spacing(5),
   },
   gridBox: {
-    paddingTop: theme.spacing.unit * 3,
+    paddingTop: theme.spacing(5),
   },
 })
 
@@ -32,7 +32,7 @@ function Home(props) {
 
   return (
     <Container className={classes.textBox}>
-    
+
       <Typography
         variant="h3"
         component="h3"
@@ -41,7 +41,7 @@ function Home(props) {
       </Typography>
 
       <Typography
-        variant="subtitle"
+        variant="subtitle1"
         component="h4"
       >
         Free speech as in freedom.

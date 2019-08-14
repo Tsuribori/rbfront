@@ -13,7 +13,7 @@ import { BrowserRouter as Router, Route, Link} from 'react-router-dom';
 
 import Theme from './Theme.js';
 import Home from './Home.js';
-
+import CreateThread from './CreateThread.js';
 
 const styles = theme => ({
   toolBar: {
@@ -61,14 +61,19 @@ class Base extends Component {
                 open={Boolean(this.state.anchorEl)}
                 onClose={this.handleClose}
              >
-               <MenuItem>Create thread</MenuItem>
+               <MenuItem
+                 component={Link}
+                 to="/create"
+               >
+                 Create thread
+               </MenuItem>
                <MenuItem>Privacy</MenuItem>
              </Menu>
             </Toolbar>
           </AppBar>
 
           <Route path="/" exact component={Home} />
-
+          <Route path="/create" component={CreateThread} />
          </Router>
         </ThemeProvider>
       </CssBaseline>
