@@ -14,6 +14,7 @@ import { BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import Theme from './Theme.js';
 import Home from './Home.js';
 import CreateThread from './CreateThread.js';
+import Privacy from './Privacy.js';
 
 const styles = theme => ({
   toolBar: {
@@ -67,13 +68,19 @@ class Base extends Component {
                >
                  Create thread
                </MenuItem>
-               <MenuItem>Privacy</MenuItem>
+               <MenuItem
+                 component={Link}
+                 to="/privacy"
+               >
+                 Privacy
+               </MenuItem>
              </Menu>
             </Toolbar>
           </AppBar>
 
           <Route path="/" exact component={Home} />
           <Route path="/create" component={CreateThread} />
+          <Route path="/privacy" component={Privacy} />
          </Router>
         </ThemeProvider>
       </CssBaseline>
