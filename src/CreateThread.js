@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
 const styles = (theme) => ({
   formContainer: {
@@ -33,12 +34,24 @@ class CreateThread extends Component {
       subject: value,
       buttonDisabled: length < 1 || length > 5,
       error: length > 5,
-      helperText: length > 5 ? 'Max character limit exceeded.' : '',
+      helperText: length > 5 ? 'Max character limit exceeded.' : this.state.helperText,
     });
   }
 
   handleSubmit = () => {
     console.log(`Submitted: ${this.state.subject}`);
+    axios.post('/api/thread', {
+      'subject': this.state.subject,
+    })
+    .then((response) => {
+      //redirect
+    }) 
+    .catch((error) => {
+      this.setState({
+        error: true,
+        helperText: 'Error while creating thread.',
+      })
+    })
   }
 
 
