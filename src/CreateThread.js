@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 const styles = (theme) => ({
@@ -40,12 +41,12 @@ class CreateThread extends Component {
 
   handleSubmit = () => {
     console.log(`Submitted: ${this.state.subject}`);
-    axios.post('/api/thread', {
+    axios.post('/api/thread/', {
       'subject': this.state.subject,
     })
     .then((response) => {
-      //redirect
-    }) 
+      this.props.history.push(`/thread/${response.data.thread_id}`);
+    })
     .catch((error) => {
       this.setState({
         error: true,
@@ -95,4 +96,4 @@ class CreateThread extends Component {
   }
 }
 
-export default withStyles(styles)(CreateThread);
+export default withStyles(styles)(withRouter(CreateThread));
