@@ -15,6 +15,7 @@ import Theme from "./Theme.js";
 import Home from "./Home.js";
 import CreateThread from "./CreateThread.js";
 import Privacy from "./Privacy.js";
+import Thread from "./Thread.js";
 
 const styles = theme => ({
   toolBar: {
@@ -71,6 +72,7 @@ class Base extends Component {
             <Route path="/" exact component={Home} />
             <Route path="/create" component={CreateThread} />
             <Route path="/privacy" component={Privacy} />
+            <Route path="/thread/:threadId" component={Thread} />
           </Router>
         </ThemeProvider>
       </CssBaseline>
