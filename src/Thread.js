@@ -10,6 +10,10 @@ import { withStyles } from "@material-ui/core/styles";
 import Moment from "react-moment";
 
 const styles = theme => ({
+  contentGrid: {
+    wordBreak: "break-all",
+    flexWrap: "nowrap"
+  },
   threadBox: {
     paddingTop: theme.spacing(3)
   },
@@ -50,8 +54,8 @@ class Thread extends Component {
               {this.state.thread.subject}
             </Typography>
             {this.state.thread.messages.map(message => (
-              <Card elevation={0} key={message.id} className={classes.card}>
-                <Grid container wrap="nowrap" zeroMinWidth={true}>
+              <Card elevation={0} key={message.id} square={true}>
+                <Grid container className={classes.contentGrid}>
                   <Grid item>
                     <CardMedia
                       className={classes.thumbnail}
