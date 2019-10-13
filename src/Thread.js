@@ -1,28 +1,34 @@
 import React, { Component } from "react";
-import Container from "@material-ui/core/Container";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import Fab from "@material-ui/core/Fab";
+import CreateIcon from "@material-ui/icons/Create";
+import Drawer from "@material-ui/core/Drawer";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import PublishIcon from "@material-ui/icons/Publish";
+import ImageIcon from "@material-ui/icons/Image";
+import BackArrow from "@material-ui/icons/ArrowBackIos";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
-import Moment from "react-moment";
+
+import ThreadFormat from "./ThreadFormat.js";
 
 const styles = theme => ({
-  contentGrid: {
-    wordBreak: "break-all",
-    flexWrap: "nowrap"
+  fab: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    right: theme.spacing(2)
   },
-  threadBox: {
-    paddingTop: theme.spacing(3)
+  textBox: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   },
-  title: {
-    paddingBottom: theme.spacing(2)
-  },
-  thumbnail: {
-    height: theme.spacing(10),
-    width: theme.spacing(10)
+  buttonContainer: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 });
 
@@ -31,7 +37,8 @@ class Thread extends Component {
     super(props);
     this.state = {
       thread: [],
-      loaded: false
+      loaded: false,
+      drawerOpen: false
     };
   }
 
@@ -44,42 +51,51 @@ class Thread extends Component {
       .catch();
   }
 
+  handleMessageDrawer = () => {
+    this.setState({ drawerOpen: !this.state.drawerOpen });
+  };
+
   render() {
     const classes = this.props.classes;
     return (
-      <Container className={classes.threadBox}>
-        {this.state.loaded && (
-          <div>
-            <Typography variant="h5" component="h5" className={classes.title}>
-              {this.state.thread.subject}
-            </Typography>
-            {this.state.thread.messages.map(message => (
-              <Card elevation={0} key={message.id} square={true}>
-                <Grid container className={classes.contentGrid}>
-                  <Grid item>
-                    <CardMedia
-                      className={classes.thumbnail}
-                      image={message.media.thumbnail}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <CardContent>
-                      <Typography variant="caption" component="span">
-                        <Moment format="YYYY-MM-DD HH:mm:ss">
-                          {message.date}
-                        </Moment>
-                      </Typography>
-                      <Typography variant="body2" component="p">
-                        {message.post}
-                      </Typography>
-                    </CardContent>
-                  </Grid>
-                </Grid>
-              </Card>
-            ))}
-          </div>
+      <div>
+        {this.state.loaded && <ThreadFormat thread={this.state.thread} />}
+        <Drawer
+          anchor="bottom"
+          variant="persistent"
+          open={this.state.drawerOpen}
+        >
+          <ClickAwayListener onClickAway={this.handleMessageDrawer}>
+            <FormControl className={classes.textBox}>
+              <TextField multiline label="Message" />
+              <div className={classes.buttonContainer}>
+                <div>
+                  <IconButton onClick={this.handleMessageDrawer}>
+                    <BackArrow />
+                  </IconButton>
+                </div>
+                <div>
+                  <IconButton>
+                    <ImageIcon />
+                  </IconButton>
+                  <IconButton>
+                    <PublishIcon />
+                  </IconButton>
+                </div>
+              </div>
+            </FormControl>
+          </ClickAwayListener>
+        </Drawer>
+        {!this.state.drawerOpen && (
+          <Fab
+            className={classes.fab}
+            color="secondary"
+            onClick={this.handleMessageDrawer}
+          >
+            <CreateIcon />
+          </Fab>
         )}
-      </Container>
+      </div>
     );
   }
 }
