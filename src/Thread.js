@@ -5,7 +5,7 @@ import Drawer from "@material-ui/core/Drawer";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import PublishIcon from "@material-ui/icons/Publish";
 import ImageIcon from "@material-ui/icons/Image";
 import BackArrow from "@material-ui/icons/ArrowBackIos";
@@ -16,7 +16,7 @@ import ThreadFormat from "./ThreadFormat.js";
 
 const styles = theme => ({
   fab: {
-    position: "absolute",
+    position: "fixed",
     bottom: theme.spacing(2),
     right: theme.spacing(2)
   },
@@ -36,23 +36,127 @@ class Thread extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      threadId: this.props.match.params.threadId,
       thread: [],
       loaded: false,
-      drawerOpen: false
+      drawerOpen: false,
+      message: "",
+      fileName: "",
+      file: null,
+      mediaId: null,
+      error: false,
+      buttonDisabled: true,
+      postSent: false
     };
   }
 
-  componentDidMount() {
+  loadThread = () => {
     axios
-      .get(`/api/thread/${this.props.match.params.threadId}/`)
+      .get(`/api/thread/${this.state.threadId}/`)
       .then(response => {
         this.setState({ thread: response.data, loaded: true });
       })
       .catch();
+  };
+
+  componentDidMount() {
+    this.loadThread();
   }
+
+  cleanErrors = () => {
+    this.setState({
+      error: false,
+      helperText: "",
+      buttonDisabled: false
+    });
+  };
 
   handleMessageDrawer = () => {
     this.setState({ drawerOpen: !this.state.drawerOpen });
+  };
+
+  handleMessage = event => {
+    this.setState({ message: event.target.value });
+    const messageLength = event.target.value.length;
+    if (messageLength > 2000) {
+      this.setState({
+        error: true,
+        helperText: "Message too long!",
+        buttonDisabled: true
+      });
+    } else if (messageLength === 0) {
+      this.setState({
+        buttonDisabled: true
+      });
+    } else {
+      this.cleanErrors();
+    }
+  };
+
+  handleFile = event => {
+    let fileName = event.target.value.split("\\").pop();
+    if (fileName.length > 15) {
+      let extension = fileName.split(".").pop();
+      fileName = fileName.replace(extension, "");
+      fileName = fileName.slice(0, 15) + "..." + extension;
+    }
+    this.setState({
+      fileName: fileName,
+      file: event.target.files[0]
+    });
+  };
+
+  messagePost = () => {
+    axios
+      .post("/api/message/", {
+        post: this.state.message,
+        thread: this.state.threadId,
+        media: this.state.mediaId
+      })
+      .then(response => {
+        this.handleMessageDrawer();
+        this.loadThread();
+      })
+      .catch(error => {
+        this.setState({
+          error: true,
+          helperText: "Error while posting."
+        });
+      });
+  };
+
+  handleUpload = () => {
+    this.cleanErrors();
+
+    if (this.state.file) {
+      this.setState({ postSent: true });
+      let formData = new FormData();
+      formData.append("image", this.state.file);
+      axios
+        .post("/api/media/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(response => {
+          this.setState({ mediaId: response.data.media_id });
+          this.messagePost();
+        })
+        .catch(error => {
+          this.setState({
+            error: true,
+            helperText: error.response.data.image
+          });
+        })
+        .then(() => {
+          this.setState({ postSent: false });
+        });
+    } else {
+      this.setState({
+        error: true,
+        helperText: "File is required for posting."
+      });
+    }
   };
 
   render() {
@@ -65,26 +169,44 @@ class Thread extends Component {
           variant="persistent"
           open={this.state.drawerOpen}
         >
-          <ClickAwayListener onClickAway={this.handleMessageDrawer}>
-            <FormControl className={classes.textBox}>
-              <TextField multiline label="Message" />
-              <div className={classes.buttonContainer}>
-                <div>
-                  <IconButton onClick={this.handleMessageDrawer}>
-                    <BackArrow />
-                  </IconButton>
-                </div>
-                <div>
-                  <IconButton>
+          {this.state.postSent && <LinearProgress color="secondary" />}
+          <FormControl className={classes.textBox}>
+            <TextField
+              multiline
+              error={this.state.error}
+              helperText={this.state.helperText}
+              label="Message"
+              onChange={this.handleMessage}
+            />
+            <div className={classes.buttonContainer}>
+              <div>
+                <IconButton onClick={this.handleMessageDrawer}>
+                  <BackArrow />
+                </IconButton>
+              </div>
+              <div>
+                {this.state.fileName}
+                <input
+                  hidden
+                  accept="image/png|image/jpg|image/jpeg|image/gif"
+                  type="file"
+                  id="file-input"
+                  onChange={this.handleFile}
+                />
+                <label htmlFor="file-input">
+                  <IconButton component="span">
                     <ImageIcon />
                   </IconButton>
-                  <IconButton>
-                    <PublishIcon />
-                  </IconButton>
-                </div>
+                </label>
+                <IconButton
+                  disabled={this.state.buttonDisabled}
+                  onClick={this.handleUpload}
+                >
+                  <PublishIcon />
+                </IconButton>
               </div>
-            </FormControl>
-          </ClickAwayListener>
+            </div>
+          </FormControl>
         </Drawer>
         {!this.state.drawerOpen && (
           <Fab
