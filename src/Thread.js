@@ -95,15 +95,24 @@ class Thread extends Component {
 
   handleFile = event => {
     let fileName = event.target.value.split("\\").pop();
-    if (fileName.length > 15) {
-      let extension = fileName.split(".").pop();
-      fileName = fileName.replace(extension, "");
-      fileName = fileName.slice(0, 15) + "..." + extension;
+    const fileSize = event.target.files[0].size;
+    if (fileSize > 10485760) {
+      this.setState({
+        error: true,
+        helperText: "File size too big, max 10MB allowed!"
+      });
+    } else {
+      this.cleanErrors();
+      if (fileName.length > 15) {
+        let extension = fileName.split(".").pop();
+        fileName = fileName.replace(extension, "");
+        fileName = fileName.slice(0, 15) + "..." + extension;
+      }
+      this.setState({
+        fileName: fileName,
+        file: event.target.files[0]
+      });
     }
-    this.setState({
-      fileName: fileName,
-      file: event.target.files[0]
-    });
   };
 
   messagePost = () => {
