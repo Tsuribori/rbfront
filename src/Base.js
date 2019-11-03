@@ -9,13 +9,14 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { ThemeProvider } from "@material-ui/styles";
 import { withStyles } from "@material-ui/core/styles";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 import Theme from "./Theme.js";
 import Home from "./Home.js";
 import CreateThread from "./CreateThread.js";
 import Privacy from "./Privacy.js";
 import Thread from "./Thread.js";
+import NotFound from "./NotFound.js";
 
 const styles = theme => ({
   toolBar: {
@@ -69,10 +70,13 @@ class Base extends Component {
               </Toolbar>
             </AppBar>
 
-            <Route path="/" exact component={Home} />
-            <Route path="/create" component={CreateThread} />
-            <Route path="/privacy" component={Privacy} />
-            <Route path="/thread/:threadId" component={Thread} />
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route path="/create" component={CreateThread} />
+              <Route path="/privacy" component={Privacy} />
+              <Route path="/thread/:threadId" component={Thread} />
+              <Route component={NotFound} />
+            </Switch>
           </Router>
         </ThemeProvider>
       </CssBaseline>

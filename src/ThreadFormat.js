@@ -79,6 +79,11 @@ function ThreadFormat(props) {
             </Grid>
           </Card>
         ))}
+        {thread.messages.length === 0 && (
+          <Typography variant="body2" component="p">
+            No posts here yet!
+          </Typography>
+        )}
       </div>
     </Container>
   );

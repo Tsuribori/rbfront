@@ -56,7 +56,11 @@ class Thread extends Component {
       .then(response => {
         this.setState({ thread: response.data, loaded: true });
       })
-      .catch();
+      .catch(error => {
+        if (error.response.status === 404) {
+          this.props.history.push("/404");
+        }
+      });
   };
 
   componentDidMount() {
