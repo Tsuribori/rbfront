@@ -11,4 +11,7 @@ RUN yarn install  --network-timeout 1000000
 
 COPY . /app/frontend
 
-CMD ["yarn", "build"]
+EXPOSE 3000
+EXPOSE 9229
+
+CMD ["yarn", "start"]
