@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
+import Divider from "@material-ui/core/Divider";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -15,8 +16,7 @@ const styles = theme => ({
     flexWrap: "nowrap"
   },
   threadBox: {
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3)
+    paddingTop: theme.spacing(3)
   },
   title: {
     paddingBottom: theme.spacing(2)
@@ -50,34 +50,39 @@ function ThreadFormat(props) {
           {thread.subject}
         </Typography>
         {thread.messages.map(message => (
-          <Card elevation={0} key={message.id} square={true}>
-            <Grid container className={classes.contentGrid}>
-              <Grid item>
-                <CardMedia
-                  className={classes.thumbnail}
-                  image={message.media.thumbnail}
-                  onClick={() => {
-                    setMedia(message.media);
-                    setLightbox(true);
-                  }}
-                />
+          <React.Fragment>
+            <Card elevation={0} key={message.id} square={true}>
+              <Grid container className={classes.contentGrid}>
+                <Grid item>
+                  <CardMedia
+                    className={classes.thumbnail}
+                    image={message.media.thumbnail}
+                    onClick={() => {
+                      setMedia(message.media);
+                      setLightbox(true);
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <CardContent>
+                    <Typography variant="caption" component="span">
+                      <Moment format="YYYY-MM-DD HH:mm:ss">
+                        {message.date}
+                      </Moment>
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      component="p"
+                      className={classes.message}
+                    >
+                      {message.post}
+                    </Typography>
+                  </CardContent>
+                </Grid>
               </Grid>
-              <Grid item>
-                <CardContent>
-                  <Typography variant="caption" component="span">
-                    <Moment format="YYYY-MM-DD HH:mm:ss">{message.date}</Moment>
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    component="p"
-                    className={classes.message}
-                  >
-                    {message.post}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
+            </Card>
+            <Divider />
+          </React.Fragment>
         ))}
         {thread.messages.length === 0 && (
           <Typography variant="body2" component="p">

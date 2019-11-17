@@ -1,14 +1,17 @@
 import React, { Component } from "react";
+import Container from "@material-ui/core/Container";
 import Fab from "@material-ui/core/Fab";
 import CreateIcon from "@material-ui/icons/Create";
 import Drawer from "@material-ui/core/Drawer";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
+import CardActionArea from "@material-ui/core/CardActionArea";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import PublishIcon from "@material-ui/icons/Publish";
 import ImageIcon from "@material-ui/icons/Image";
 import BackArrow from "@material-ui/icons/ArrowBackIos";
+import RefreshIcon from "@material-ui/icons/Refresh";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -29,6 +32,14 @@ const styles = theme => ({
   buttonContainer: {
     display: "flex",
     justifyContent: "space-between"
+  },
+  refreshButtonContainer: {
+    marginBottom: theme.spacing(2)
+  },
+  refreshButton: {
+    textAlign: "center",
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2)
   }
 });
 
@@ -45,7 +56,6 @@ class Thread extends Component {
       file: null,
       mediaId: null,
       error: false,
-      buttonDisabled: true,
       postSent: false
     };
   }
@@ -70,8 +80,7 @@ class Thread extends Component {
   cleanErrors = () => {
     this.setState({
       error: false,
-      helperText: "",
-      buttonDisabled: false
+      helperText: ""
     });
   };
 
@@ -85,12 +94,7 @@ class Thread extends Component {
     if (messageLength > 2000) {
       this.setState({
         error: true,
-        helperText: "Message too long!",
-        buttonDisabled: true
-      });
-    } else if (messageLength === 0) {
-      this.setState({
-        buttonDisabled: true
+        helperText: "Message too long!"
       });
     } else {
       this.cleanErrors();
@@ -133,7 +137,7 @@ class Thread extends Component {
       .catch(error => {
         this.setState({
           error: true,
-          helperText: "Error while posting."
+          helperText: error.response.data.post
         });
       });
   };
@@ -177,6 +181,14 @@ class Thread extends Component {
     return (
       <div>
         {this.state.loaded && <ThreadFormat thread={this.state.thread} />}
+        <Container className={classes.refreshButtonContainer}>
+          <CardActionArea
+            className={classes.refreshButton}
+            onClick={this.loadThread}
+          >
+            <RefreshIcon fontSize="large" color="secondary" />
+          </CardActionArea>
+        </Container>
         <Drawer
           anchor="bottom"
           variant="persistent"
@@ -211,10 +223,7 @@ class Thread extends Component {
                     <ImageIcon />
                   </IconButton>
                 </label>
-                <IconButton
-                  disabled={this.state.buttonDisabled}
-                  onClick={this.handleUpload}
-                >
+                <IconButton onClick={this.handleUpload}>
                   <PublishIcon />
                 </IconButton>
               </div>
