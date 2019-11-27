@@ -71,18 +71,20 @@ class Thread extends Component {
     return (
       <div>
         {this.state.loaded && <ThreadFormat thread={this.state.thread} />}
-        <Container className={classes.refreshButtonContainer}>
-          <CardActionArea
-            className={classes.refreshButton}
-            onClick={this.loadThread}
-          >
-            {this.state.refreshing ? (
-              <CircularProgress color="secondary" />
-            ) : (
-              <RefreshIcon fontSize="large" color="secondary" />
-            )}
-          </CardActionArea>
-        </Container>
+        {!this.state.thread.closed && (
+          <Container className={classes.refreshButtonContainer}>
+            <CardActionArea
+              className={classes.refreshButton}
+              onClick={this.loadThread}
+            >
+              {this.state.refreshing ? (
+                <CircularProgress color="secondary" />
+              ) : (
+                <RefreshIcon fontSize="large" color="secondary" />
+              )}
+            </CardActionArea>
+          </Container>
+        )}
         <Drawer
           anchor="bottom"
           variant="persistent"
@@ -94,7 +96,7 @@ class Thread extends Component {
             handleMessageDrawer={this.handleMessageDrawer}
           />
         </Drawer>
-        {!this.state.drawerOpen && (
+        {!this.state.drawerOpen && !this.state.thread.closed && (
           <Fab
             className={classes.fab}
             color="secondary"
