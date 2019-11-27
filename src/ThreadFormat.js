@@ -50,8 +50,8 @@ function ThreadFormat(props) {
           {thread.subject}
         </Typography>
         {thread.messages.map(message => (
-          <React.Fragment>
-            <Card elevation={0} key={message.id} square={true}>
+          <React.Fragment key={message.id}>
+            <Card elevation={0} square={true}>
               <Grid container className={classes.contentGrid}>
                 <Grid item>
                   <CardMedia

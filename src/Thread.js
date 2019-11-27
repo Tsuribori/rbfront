@@ -3,19 +3,14 @@ import Container from "@material-ui/core/Container";
 import Fab from "@material-ui/core/Fab";
 import CreateIcon from "@material-ui/icons/Create";
 import Drawer from "@material-ui/core/Drawer";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import PublishIcon from "@material-ui/icons/Publish";
-import ImageIcon from "@material-ui/icons/Image";
-import BackArrow from "@material-ui/icons/ArrowBackIos";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 
 import ThreadFormat from "./ThreadFormat.js";
+import Send from "./Send.js";
 
 const styles = theme => ({
   fab: {
@@ -23,23 +18,14 @@ const styles = theme => ({
     bottom: theme.spacing(2),
     right: theme.spacing(2)
   },
-  textBox: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
-  },
-  buttonContainer: {
-    display: "flex",
-    justifyContent: "space-between"
-  },
   refreshButtonContainer: {
     marginBottom: theme.spacing(2)
   },
   refreshButton: {
     textAlign: "center",
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
+    minHeight: theme.spacing(10)
   }
 });
 
@@ -50,17 +36,13 @@ class Thread extends Component {
       threadId: this.props.match.params.threadId,
       thread: [],
       loaded: false,
-      drawerOpen: false,
-      message: "",
-      fileName: "",
-      file: null,
-      mediaId: null,
-      error: false,
-      postSent: false
+      refreshing: false,
+      drawerOpen: false
     };
   }
 
   loadThread = () => {
+    this.setState({ refreshing: true });
     axios
       .get(`/api/thread/${this.state.threadId}/`)
       .then(response => {
@@ -70,6 +52,9 @@ class Thread extends Component {
         if (error.response.status === 404) {
           this.props.history.push("/404");
         }
+      })
+      .then(() => {
+        this.setState({ refreshing: false });
       });
   };
 
@@ -77,103 +62,8 @@ class Thread extends Component {
     this.loadThread();
   }
 
-  cleanErrors = () => {
-    this.setState({
-      error: false,
-      helperText: ""
-    });
-  };
-
   handleMessageDrawer = () => {
     this.setState({ drawerOpen: !this.state.drawerOpen });
-  };
-
-  handleMessage = event => {
-    this.setState({ message: event.target.value });
-    const messageLength = event.target.value.length;
-    if (messageLength > 2000) {
-      this.setState({
-        error: true,
-        helperText: "Message too long!"
-      });
-    } else {
-      this.cleanErrors();
-    }
-  };
-
-  handleFile = event => {
-    let fileName = event.target.value.split("\\").pop();
-    const fileSize = event.target.files[0].size;
-    if (fileSize > 10485760) {
-      this.setState({
-        error: true,
-        helperText: "File size too big, max 10MB allowed!"
-      });
-    } else {
-      this.cleanErrors();
-      if (fileName.length > 15) {
-        let extension = fileName.split(".").pop();
-        fileName = fileName.replace(extension, "");
-        fileName = fileName.slice(0, 15) + "..." + extension;
-      }
-      this.setState({
-        fileName: fileName,
-        file: event.target.files[0]
-      });
-    }
-  };
-
-  messagePost = () => {
-    axios
-      .post("/api/message/", {
-        post: this.state.message,
-        thread: this.state.threadId,
-        media: this.state.mediaId
-      })
-      .then(response => {
-        this.handleMessageDrawer();
-        this.loadThread();
-      })
-      .catch(error => {
-        this.setState({
-          error: true,
-          helperText: error.response.data.post
-        });
-      });
-  };
-
-  handleUpload = () => {
-    this.cleanErrors();
-
-    if (this.state.file) {
-      this.setState({ postSent: true });
-      let formData = new FormData();
-      formData.append("image", this.state.file);
-      axios
-        .post("/api/media/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        })
-        .then(response => {
-          this.setState({ mediaId: response.data.media_id });
-          this.messagePost();
-        })
-        .catch(error => {
-          this.setState({
-            error: true,
-            helperText: error.response.data.image
-          });
-        })
-        .then(() => {
-          this.setState({ postSent: false });
-        });
-    } else {
-      this.setState({
-        error: true,
-        helperText: "File is required for posting."
-      });
-    }
   };
 
   render() {
@@ -186,7 +76,11 @@ class Thread extends Component {
             className={classes.refreshButton}
             onClick={this.loadThread}
           >
-            <RefreshIcon fontSize="large" color="secondary" />
+            {this.state.refreshing ? (
+              <CircularProgress color="secondary" />
+            ) : (
+              <RefreshIcon fontSize="large" color="secondary" />
+            )}
           </CardActionArea>
         </Container>
         <Drawer
@@ -194,41 +88,11 @@ class Thread extends Component {
           variant="persistent"
           open={this.state.drawerOpen}
         >
-          {this.state.postSent && <LinearProgress color="secondary" />}
-          <FormControl className={classes.textBox}>
-            <TextField
-              multiline
-              error={this.state.error}
-              helperText={this.state.helperText}
-              label="Message"
-              onChange={this.handleMessage}
-            />
-            <div className={classes.buttonContainer}>
-              <div>
-                <IconButton onClick={this.handleMessageDrawer}>
-                  <BackArrow />
-                </IconButton>
-              </div>
-              <div>
-                {this.state.fileName}
-                <input
-                  hidden
-                  accept="image/png|image/jpg|image/jpeg|image/gif"
-                  type="file"
-                  id="file-input"
-                  onChange={this.handleFile}
-                />
-                <label htmlFor="file-input">
-                  <IconButton component="span">
-                    <ImageIcon />
-                  </IconButton>
-                </label>
-                <IconButton onClick={this.handleUpload}>
-                  <PublishIcon />
-                </IconButton>
-              </div>
-            </div>
-          </FormControl>
+          <Send
+            threadId={this.state.threadId}
+            loadThread={this.loadThread}
+            handleMessageDrawer={this.handleMessageDrawer}
+          />
         </Drawer>
         {!this.state.drawerOpen && (
           <Fab
