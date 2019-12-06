@@ -143,7 +143,6 @@ class Send extends Component {
     const classes = this.props.classes;
     return (
       <React.Fragment>
-        {this.state.postSent && <LinearProgress color="secondary" />}
         <FormControl className={classes.textBox}>
           <TextField
             multiline
@@ -181,6 +180,11 @@ class Send extends Component {
             </div>
           </div>
         </FormControl>
+        {this.state.postSent && (
+          <FormControl>
+            <LinearProgress color="secondary" />
+          </FormControl>
+        )}
       </React.Fragment>
     );
   }

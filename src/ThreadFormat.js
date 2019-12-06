@@ -12,8 +12,8 @@ import { Lightbox } from "react-modal-image";
 
 const styles = theme => ({
   contentGrid: {
-    wordBreak: "break-all",
-    flexWrap: "nowrap"
+    wordBreak: "break-word",
+    flexWrap: "wrap"
   },
   threadBox: {
     paddingTop: theme.spacing(3)
@@ -65,11 +65,17 @@ function ThreadFormat(props) {
                 </Grid>
                 <Grid item>
                   <CardContent>
-                    <Typography variant="caption" component="span">
+                    <Typography variant="caption" component="p">
                       <Moment format="YYYY-MM-DD HH:mm:ss">
                         {message.date}
                       </Moment>
                     </Typography>
+                  </CardContent>
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid item>
+                  <CardContent>
                     <Typography
                       variant="body2"
                       component="p"
