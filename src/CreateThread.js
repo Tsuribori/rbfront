@@ -42,7 +42,6 @@ class CreateThread extends Component {
   };
 
   handleSubmit = () => {
-    console.log(`Submitted: ${this.state.subject}`);
     axios
       .post("/api/thread/", {
         subject: this.state.subject
