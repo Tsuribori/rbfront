@@ -159,18 +159,15 @@ class Send extends Component {
             </div>
             <div>
               {this.state.fileName}
-              <input
-                hidden
-                accept="image/png|image/jpg|image/jpeg|image/gif"
-                type="file"
-                id="file-input"
-                onChange={this.handleFile}
-              />
-              <label htmlFor="file-input">
-                <IconButton component="span">
-                  <ImageIcon />
-                </IconButton>
-              </label>
+              <IconButton variant="contained" component="label">
+                <input
+                  hidden
+                  accept="image/png|image/jpg|image/jpeg|image/gif"
+                  type="file"
+                  onChange={this.handleFile}
+                />
+                <ImageIcon />
+              </IconButton>
               <IconButton
                 onClick={this.handleUpload}
                 disabled={this.state.buttonDisabled}
