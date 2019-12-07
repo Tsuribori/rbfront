@@ -8,6 +8,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
+import DocumentTitle from "react-document-title";
 
 import ThreadFormat from "./ThreadFormat.js";
 import Send from "./Send.js";
@@ -35,6 +36,7 @@ class Thread extends Component {
     this.state = {
       threadId: this.props.match.params.threadId,
       thread: [],
+      title: "Thread",
       loaded: false,
       refreshing: false,
       drawerOpen: false
@@ -46,7 +48,11 @@ class Thread extends Component {
     axios
       .get(`/api/thread/${this.state.threadId}/`)
       .then(response => {
-        this.setState({ thread: response.data, loaded: true });
+        this.setState({
+          thread: response.data,
+          loaded: true,
+          title: response.data.subject
+        });
       })
       .catch(error => {
         if (error.response.status === 404) {
@@ -69,43 +75,45 @@ class Thread extends Component {
   render() {
     const classes = this.props.classes;
     return (
-      <div>
-        {this.state.loaded && <ThreadFormat thread={this.state.thread} />}
-        {!this.state.thread.closed && (
-          <Container className={classes.refreshButtonContainer}>
-            <CardActionArea
-              className={classes.refreshButton}
-              onClick={this.loadThread}
-            >
-              {this.state.refreshing ? (
-                <CircularProgress color="secondary" />
-              ) : (
-                <RefreshIcon fontSize="large" color="secondary" />
-              )}
-            </CardActionArea>
-          </Container>
-        )}
-        <Drawer
-          anchor="bottom"
-          variant="persistent"
-          open={this.state.drawerOpen}
-        >
-          <Send
-            threadId={this.state.threadId}
-            loadThread={this.loadThread}
-            handleMessageDrawer={this.handleMessageDrawer}
-          />
-        </Drawer>
-        {!this.state.drawerOpen && !this.state.thread.closed && (
-          <Fab
-            className={classes.fab}
-            color="secondary"
-            onClick={this.handleMessageDrawer}
+      <DocumentTitle title={this.state.title}>
+        <React.Fragment>
+          {this.state.loaded && <ThreadFormat thread={this.state.thread} />}
+          {!this.state.thread.closed && (
+            <Container className={classes.refreshButtonContainer}>
+              <CardActionArea
+                className={classes.refreshButton}
+                onClick={this.loadThread}
+              >
+                {this.state.refreshing ? (
+                  <CircularProgress color="secondary" />
+                ) : (
+                  <RefreshIcon fontSize="large" color="secondary" />
+                )}
+              </CardActionArea>
+            </Container>
+          )}
+          <Drawer
+            anchor="bottom"
+            variant="persistent"
+            open={this.state.drawerOpen}
           >
-            <CreateIcon />
-          </Fab>
-        )}
-      </div>
+            <Send
+              threadId={this.state.threadId}
+              loadThread={this.loadThread}
+              handleMessageDrawer={this.handleMessageDrawer}
+            />
+          </Drawer>
+          {!this.state.drawerOpen && !this.state.thread.closed && (
+            <Fab
+              className={classes.fab}
+              color="secondary"
+              onClick={this.handleMessageDrawer}
+            >
+              <CreateIcon />
+            </Fab>
+          )}
+        </React.Fragment>
+      </DocumentTitle>
     );
   }
 }

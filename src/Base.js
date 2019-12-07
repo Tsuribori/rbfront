@@ -10,6 +10,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { ThemeProvider } from "@material-ui/styles";
 import { withStyles } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import DocumentTitle from "react-document-title";
 
 import Theme from "./Theme.js";
 import Home from "./Home.js";
@@ -44,42 +45,44 @@ class Base extends Component {
   render() {
     const classes = this.props.classes;
     return (
-      <CssBaseline>
-        <ThemeProvider theme={Theme}>
-          <Router>
-            <AppBar position="static">
-              <Toolbar className={classes.toolBar}>
-                <IconButton component={Link} to="/">
-                  <HomeIcon />
-                </IconButton>
-                <IconButton onClick={this.handleMenu}>
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  anchorEl={this.state.anchorEl}
-                  open={Boolean(this.state.anchorEl)}
-                  onClose={this.handleClose}
-                >
-                  <MenuItem component={Link} to="/create">
-                    Create thread
-                  </MenuItem>
-                  <MenuItem component={Link} to="/privacy">
-                    Privacy
-                  </MenuItem>
-                </Menu>
-              </Toolbar>
-            </AppBar>
+      <DocumentTitle title={process.env.REACT_APP_SITE_NAME}>
+        <CssBaseline>
+          <ThemeProvider theme={Theme}>
+            <Router>
+              <AppBar position="static">
+                <Toolbar className={classes.toolBar}>
+                  <IconButton component={Link} to="/">
+                    <HomeIcon />
+                  </IconButton>
+                  <IconButton onClick={this.handleMenu}>
+                    <MenuIcon />
+                  </IconButton>
+                  <Menu
+                    anchorEl={this.state.anchorEl}
+                    open={Boolean(this.state.anchorEl)}
+                    onClose={this.handleClose}
+                  >
+                    <MenuItem component={Link} to="/create">
+                      Create thread
+                    </MenuItem>
+                    <MenuItem component={Link} to="/privacy">
+                      Privacy
+                    </MenuItem>
+                  </Menu>
+                </Toolbar>
+              </AppBar>
 
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/create" component={CreateThread} />
-              <Route path="/privacy" component={Privacy} />
-              <Route path="/thread/:threadId" component={Thread} />
-              <Route component={NotFound} />
-            </Switch>
-          </Router>
-        </ThemeProvider>
-      </CssBaseline>
+              <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/create" component={CreateThread} />
+                <Route path="/privacy" component={Privacy} />
+                <Route path="/thread/:threadId" component={Thread} />
+                <Route component={NotFound} />
+              </Switch>
+            </Router>
+          </ThemeProvider>
+        </CssBaseline>
+      </DocumentTitle>
     );
   }
 }

@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
+import DocumentTitle from "react-document-title";
 
 const styles = theme => ({
   formContainer: {
@@ -61,33 +62,35 @@ class CreateThread extends Component {
     const classes = this.props.classes;
 
     return (
-      <Container className={classes.formContainer}>
-        <Typography variant="h5" component="h5">
-          Create a new thread.
-        </Typography>
-
+      <DocumentTitle title="Create Thread">
         <Container className={classes.formContainer}>
-          <TextField
-            multiline
-            error={this.state.error}
-            helperText={this.state.helperText}
-            variant="outlined"
-            label="Subject"
-            onChange={this.handleChange}
-          />
-        </Container>
+          <Typography variant="h5" component="h5">
+            Create a new thread.
+          </Typography>
 
-        <Container className={classes.submitContainer}>
-          <Button
-            disabled={this.state.buttonDisabled}
-            onClick={this.handleSubmit}
-            variant="contained"
-            color="secondary"
-          >
-            Submit
-          </Button>
+          <Container className={classes.formContainer}>
+            <TextField
+              multiline
+              error={this.state.error}
+              helperText={this.state.helperText}
+              variant="outlined"
+              label="Subject"
+              onChange={this.handleChange}
+            />
+          </Container>
+
+          <Container className={classes.submitContainer}>
+            <Button
+              disabled={this.state.buttonDisabled}
+              onClick={this.handleSubmit}
+              variant="contained"
+              color="secondary"
+            >
+              Submit
+            </Button>
+          </Container>
         </Container>
-      </Container>
+      </DocumentTitle>
     );
   }
 }
