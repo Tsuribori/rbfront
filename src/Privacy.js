@@ -26,8 +26,7 @@ function Privacy(props) {
 
         <Typography variant="body1" className={classes.statement}>
           This website stores no information about you. It does not collect user
-          metrics or your IP address. The web server stores no access logs. Your
-          messages are stored encrypted in the database.
+          metrics or your IP address. The web server stores no access logs.
         </Typography>
       </Container>
     </DocumentTitle>
