@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Divider from "@material-ui/core/Divider";
 import Card from "@material-ui/core/Card";
@@ -35,6 +35,14 @@ function ThreadFormat(props) {
   const thread = props.thread;
   const [lightbox, setLightbox] = useState(false);
   const [media, setMedia] = useState([]);
+
+  useEffect(() => {
+    // Preload full-size images
+    thread.messages.forEach(message => {
+      const image = new Image();
+      image.src = message.media.image;
+    });
+  });
 
   return (
     <Container className={classes.threadBox}>
