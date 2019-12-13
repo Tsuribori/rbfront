@@ -35,11 +35,20 @@ class Send extends Component {
       postSent: false
     };
   }
+
   cleanErrors = () => {
     this.setState({
       error: false,
       helperText: "",
       buttonDisabled: false
+    });
+  };
+
+  cleanState = () => {
+    this.setState({
+      message: "",
+      fileName: "",
+      mediaId: null
     });
   };
 
@@ -94,6 +103,7 @@ class Send extends Component {
       .then(response => {
         this.props.handleMessageDrawer();
         this.props.loadThread();
+        this.cleanState();
       })
       .catch(error => {
         const errorData = error.response.data;
@@ -150,6 +160,7 @@ class Send extends Component {
             helperText={this.state.helperText}
             label="Message"
             onChange={this.handleMessage}
+            value={this.state.message}
           />
           <div className={classes.buttonContainer}>
             <div>
