@@ -55,7 +55,7 @@ class Send extends Component {
   handleMessage = event => {
     this.setState({ message: event.target.value });
     const messageLength = event.target.value.length;
-    if (messageLength > 2000) {
+    if (messageLength > 10000) {
       this.setState({
         error: true,
         helperText: "Message too long!",
