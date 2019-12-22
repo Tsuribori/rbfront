@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import Container from "@material-ui/core/Container";
+import FormGroup from "@material-ui/core/FormGroup";
 import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -23,6 +26,7 @@ class CreateThread extends Component {
     super(props);
     this.state = {
       subject: "",
+      checked: true,
       buttonDisabled: true,
       error: false,
       helperText: ""
@@ -41,10 +45,15 @@ class CreateThread extends Component {
     });
   };
 
+  handleCheckbox = () => {
+    this.setState({ checked: !this.state.checked });
+  };
+
   handleSubmit = () => {
     axios
       .post("/api/thread/", {
-        subject: this.state.subject
+        subject: this.state.subject,
+        public: this.state.checked
       })
       .then(response => {
         this.props.history.push(`/thread/${response.data.thread_id}`);
@@ -66,16 +75,26 @@ class CreateThread extends Component {
           <Typography variant="h5" component="h5">
             Create a new thread.
           </Typography>
-
           <Container className={classes.formContainer}>
-            <TextField
-              multiline
-              error={this.state.error}
-              helperText={this.state.helperText}
-              variant="outlined"
-              label="Subject"
-              onChange={this.handleChange}
-            />
+            <FormGroup>
+              <TextField
+                multiline
+                error={this.state.error}
+                helperText={this.state.helperText}
+                variant="outlined"
+                label="Subject"
+                onChange={this.handleChange}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.checked}
+                    onChange={this.handleCheckbox}
+                  />
+                }
+                label="Public"
+              />
+            </FormGroup>
           </Container>
 
           <Container className={classes.submitContainer}>

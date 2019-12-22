@@ -17,6 +17,7 @@ import Home from "./Home.js";
 import CreateThread from "./CreateThread.js";
 import Privacy from "./Privacy.js";
 import Thread from "./Thread.js";
+import Public from "./Public.js";
 import NotFound from "./NotFound.js";
 
 const styles = theme => ({
@@ -65,6 +66,9 @@ class Base extends Component {
                     <MenuItem component={Link} to="/create">
                       Create thread
                     </MenuItem>
+                    <MenuItem component={Link} to="/public">
+                      Public threads
+                    </MenuItem>
                     <MenuItem component={Link} to="/privacy">
                       Privacy
                     </MenuItem>
@@ -75,6 +79,7 @@ class Base extends Component {
               <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/create" component={CreateThread} />
+                <Route path="/public" component={Public} />
                 <Route path="/privacy" component={Privacy} />
                 <Route path="/thread/:threadId" component={Thread} />
                 <Route component={NotFound} />
