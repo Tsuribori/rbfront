@@ -33,7 +33,7 @@ class Public extends Component {
     super(props);
     this.state = {
       threads: [],
-      next: "api/public/",
+      next: "/api/public/",
       loaded: false
     };
   }
@@ -48,6 +48,10 @@ class Public extends Component {
     });
   };
 
+  componentDidMount() {
+    this.getNext();
+  }
+
   render() {
     const classes = this.props.classes;
     return (
@@ -60,6 +64,7 @@ class Public extends Component {
           )}
           <InfiniteScroll
             loadMore={this.getNext}
+            initialLoad={false}
             hasMore={Boolean(this.state.next)}
             loader={
               <div key={0} className={classes.loader}>
