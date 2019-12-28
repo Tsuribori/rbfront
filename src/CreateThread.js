@@ -40,8 +40,7 @@ class CreateThread extends Component {
       subject: value,
       buttonDisabled: length < 1 || length > 100,
       error: length > 100,
-      helperText:
-        length > 100 ? "Max character limit exceeded." : this.state.helperText
+      helperText: length > 100 ? "Max character limit exceeded." : ""
     });
   };
 
