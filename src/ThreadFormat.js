@@ -6,6 +6,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import Tooltip from "@material-ui/core/Tooltip";
+import AllInboxIcon from "@material-ui/icons/AllInbox";
 import { withStyles } from "@material-ui/core/styles";
 import Moment from "react-moment";
 import { Lightbox } from "react-modal-image";
@@ -18,7 +20,9 @@ const styles = theme => ({
   threadBox: {
     paddingTop: theme.spacing(3)
   },
-  title: {
+  titleBox: {
+    display: "flex",
+    justifyContent: "space-between",
     paddingBottom: theme.spacing(2)
   },
   thumbnail: {
@@ -54,9 +58,16 @@ function ThreadFormat(props) {
         />
       )}
       <div>
-        <Typography variant="h5" component="h5" className={classes.title}>
-          {thread.subject}
-        </Typography>
+        <div className={classes.titleBox}>
+          <Typography variant="h5" component="h5">
+            {thread.subject}
+          </Typography>
+          {thread.closed && (
+            <Tooltip title="Closed">
+              <AllInboxIcon fontSize="large" />
+            </Tooltip>
+          )}
+        </div>
         {thread.messages.map(message => (
           <React.Fragment key={message.id}>
             <Card elevation={0} square={true}>
