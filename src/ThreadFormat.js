@@ -11,6 +11,7 @@ import AllInboxIcon from "@material-ui/icons/AllInbox";
 import { withStyles } from "@material-ui/core/styles";
 import Moment from "react-moment";
 import { Lightbox } from "react-modal-image";
+import ReactMarkdown from "react-markdown";
 
 const styles = theme => ({
   contentGrid: {
@@ -28,6 +29,9 @@ const styles = theme => ({
   thumbnail: {
     height: theme.spacing(10),
     width: theme.spacing(10)
+  },
+  postContent: {
+    padding: theme.spacing(2)
   },
   message: {
     whiteSpace: "pre-line"
@@ -94,15 +98,12 @@ function ThreadFormat(props) {
               </Grid>
               <Grid container>
                 <Grid item>
-                  <CardContent>
-                    <Typography
-                      variant="body2"
-                      component="p"
+                  <div className={classes.postContent}>
+                    <ReactMarkdown
                       className={classes.message}
-                    >
-                      {message.post}
-                    </Typography>
-                  </CardContent>
+                      source={message.post}
+                    />
+                  </div>
                 </Grid>
               </Grid>
             </Card>
