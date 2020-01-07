@@ -34,7 +34,11 @@ const styles = theme => ({
     padding: theme.spacing(2)
   },
   message: {
-    whiteSpace: "pre-line"
+    whiteSpace: "pre-line",
+    "& blockquote": {
+      margin: 0,
+      color: "#117743;"
+    }
   }
 });
 
@@ -101,6 +105,7 @@ function ThreadFormat(props) {
                   <div className={classes.postContent}>
                     <ReactMarkdown
                       className={classes.message}
+                      disallowedTypes={["image"]}
                       source={message.post}
                     />
                   </div>
