@@ -11,4 +11,16 @@ const Theme = createMuiTheme({
   }
 });
 
-export default Theme;
+const DarkTheme = createMuiTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: "#272C34"
+    },
+    secondary: {
+      main: "#47945C"
+    }
+  }
+});
+
+export { Theme, DarkTheme };
