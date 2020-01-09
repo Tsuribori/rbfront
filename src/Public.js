@@ -39,7 +39,9 @@ class Public extends Component {
   }
 
   getNext = () => {
-    axios.get(this.state.next).then(response => {
+    const next = this.state.next;
+    this.setState({ next: null }); // Prevent duplicates from loading
+    axios.get(next).then(response => {
       this.setState({
         threads: this.state.threads.concat(response.data.results),
         next: response.data.next,
@@ -47,10 +49,6 @@ class Public extends Component {
       });
     });
   };
-
-  componentDidMount() {
-    this.getNext();
-  }
 
   render() {
     const classes = this.props.classes;
@@ -64,7 +62,6 @@ class Public extends Component {
           )}
           <InfiniteScroll
             loadMore={this.getNext}
-            initialLoad={false}
             hasMore={Boolean(this.state.next)}
             loader={
               <div key={0} className={classes.loader}>
