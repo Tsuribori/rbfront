@@ -37,7 +37,7 @@ const styles = theme => ({
     whiteSpace: "pre-line",
     "& blockquote": {
       margin: 0,
-      color: "#117743;"
+      color: "#22BA6D"
     }
   }
 });
