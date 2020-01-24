@@ -106,6 +106,7 @@ function ThreadFormat(props) {
                     <ReactMarkdown
                       className={classes.message}
                       disallowedTypes={["image"]}
+                      linkTarget="_blank"
                       source={message.post}
                     />
                   </div>
