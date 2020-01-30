@@ -14,10 +14,6 @@ import { Lightbox } from "react-modal-image";
 import ReactMarkdown from "react-markdown";
 
 const styles = theme => ({
-  contentGrid: {
-    wordBreak: "break-word",
-    flexWrap: "wrap"
-  },
   threadBox: {
     paddingTop: theme.spacing(3)
   },
@@ -28,7 +24,8 @@ const styles = theme => ({
   },
   thumbnail: {
     height: theme.spacing(10),
-    width: theme.spacing(10)
+    width: theme.spacing(10),
+    borderRadius: "5%"
   },
   postContent: {
     padding: theme.spacing(2)
@@ -79,7 +76,7 @@ function ThreadFormat(props) {
         {thread.messages.map(message => (
           <React.Fragment key={message.id}>
             <Card elevation={0} square={true}>
-              <Grid container className={classes.contentGrid}>
+              <Grid container>
                 <Grid item>
                   <CardMedia
                     className={classes.thumbnail}
