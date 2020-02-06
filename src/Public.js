@@ -25,6 +25,9 @@ const styles = theme => ({
   empty: {
     textAlign: "center",
     paddingTop: theme.spacing(5)
+  },
+  titleLink: {
+    overflowWrap: "break-word"
   }
 });
 
@@ -81,6 +84,7 @@ class Public extends Component {
                     </div>
                     <ListItemText>
                       <LinkFormat
+                        className={classes.titleLink}
                         color="secondary"
                         component={Link}
                         to={`/thread/${thread.thread_id}`}

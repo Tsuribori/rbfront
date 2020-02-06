@@ -22,6 +22,10 @@ const styles = theme => ({
     justifyContent: "space-between",
     paddingBottom: theme.spacing(2)
   },
+  subject: {
+    minWidth: "80%",
+    overflowWrap: "break-word"
+  },
   thumbnail: {
     height: theme.spacing(10),
     width: theme.spacing(10),
@@ -64,7 +68,7 @@ function ThreadFormat(props) {
       )}
       <div>
         <div className={classes.titleBox}>
-          <Typography variant="h5" component="h5">
+          <Typography className={classes.subject} variant="h5" component="h5">
             {thread.subject}
           </Typography>
           {thread.closed && (
