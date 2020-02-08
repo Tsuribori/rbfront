@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Container from "@material-ui/core/Container";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -15,12 +14,11 @@ import { withStyles } from "@material-ui/core/styles";
 import DocumentTitle from "react-document-title";
 import InfiniteScroll from "react-infinite-scroller";
 
+import Loader from "./Loader.js";
+
 const styles = theme => ({
   messageCount: {
     alignItems: "flex-start"
-  },
-  loader: {
-    textAlign: "center"
   },
   empty: {
     textAlign: "center",
@@ -58,6 +56,7 @@ class Public extends Component {
     return (
       <DocumentTitle title="Public threads">
         <Container>
+          {!this.state.loaded && <Loader />}
           {this.state.threads.length === 0 && this.state.loaded && (
             <Typography className={classes.empty} variant="h5">
               No threads here yet!
@@ -66,11 +65,7 @@ class Public extends Component {
           <InfiniteScroll
             loadMore={this.getNext}
             hasMore={Boolean(this.state.next)}
-            loader={
-              <div key={0} className={classes.loader}>
-                <CircularProgress color="secondary" />
-              </div>
-            }
+            loader={<Loader key={0} />}
           >
             <List>
               {this.state.threads.map(thread => (
