@@ -106,10 +106,9 @@ class Send extends Component {
         this.cleanState();
       })
       .catch(error => {
-        const errorData = error.response.data;
         this.setState({
           error: true,
-          helperText: errorData.post ? errorData.post : errorData.thread
+          helperText: Object.values(error.response.data)[0]
         });
       });
   };
@@ -134,7 +133,7 @@ class Send extends Component {
         .catch(error => {
           this.setState({
             error: true,
-            helperText: error.response.data.image
+            helperText: Object.values(error.response.data)[0]
           });
         })
         .then(() => {
