@@ -2,6 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import axios from "axios";
+
+// Set axios defaults to be aware of CSRF with backend
+axios.defaults.xsrfCookieName = "csrftoken";
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
