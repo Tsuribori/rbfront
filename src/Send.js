@@ -34,6 +34,7 @@ class Send extends Component {
       error: false,
       postSent: false
     };
+    this.fileInput = React.createRef();
   }
 
   cleanErrors = () => {
@@ -48,6 +49,7 @@ class Send extends Component {
     this.setState({
       message: "",
       fileName: "",
+      file: null,
       mediaId: null
     });
   };
@@ -71,8 +73,16 @@ class Send extends Component {
   };
 
   handleFile = event => {
-    let fileName = event.target.value.split("\\").pop();
-    const fileSize = event.target.files[0].size;
+    // TODO: change this to a more clean, elegant solution
+    let fileObject = null;
+    try {
+      fileObject = event.target.files[0];
+    } catch {
+      fileObject = this.fileInput.current.files[0];
+    }
+
+    let fileName = fileObject.name;
+    const fileSize = fileObject.size;
     if (fileSize > 10485760) {
       this.setState({
         error: true,
@@ -88,7 +98,7 @@ class Send extends Component {
       }
       this.setState({
         fileName: fileName,
-        file: event.target.files[0]
+        file: fileObject
       });
     }
   };
@@ -152,7 +162,15 @@ class Send extends Component {
     const classes = this.props.classes;
     return (
       <React.Fragment>
-        <FormControl className={classes.textBox}>
+        <FormControl
+          onDragOver={event => event.preventDefault()}
+          onDrop={event => {
+            event.preventDefault();
+            this.fileInput.current = event.dataTransfer;
+            this.handleFile();
+          }}
+          className={classes.textBox}
+        >
           <TextField
             multiline
             error={this.state.error}
@@ -174,10 +192,12 @@ class Send extends Component {
                   hidden
                   accept="image/png|image/jpg|image/jpeg|image/gif"
                   type="file"
+                  ref={this.fileInput}
                   onChange={this.handleFile}
                 />
                 <ImageIcon />
               </IconButton>
+
               <IconButton
                 onClick={this.handleUpload}
                 disabled={this.state.buttonDisabled}
@@ -187,6 +207,7 @@ class Send extends Component {
             </div>
           </div>
         </FormControl>
+
         {this.state.postSent && (
           <FormControl>
             <LinearProgress color="secondary" />
