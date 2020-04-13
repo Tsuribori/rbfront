@@ -49,14 +49,6 @@ function ThreadFormat(props) {
   const [lightbox, setLightbox] = useState(false);
   const [media, setMedia] = useState([]);
 
-  useEffect(() => {
-    // Preload full-size images
-    thread.messages.forEach(message => {
-      const image = new Image();
-      image.src = message.media.image;
-    });
-  });
-
   return (
     <Container className={classes.threadBox}>
       {lightbox && (
