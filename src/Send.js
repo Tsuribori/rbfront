@@ -28,14 +28,20 @@ class Send extends Component {
     this.state = {
       buttonDisabled: true,
       message: "",
+      fileRaw: null,
       fileName: "",
       file: null,
       mediaId: null,
       error: false,
       postSent: false
     };
-    this.fileInput = React.createRef();
   }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (this.state.fileRaw != prevState.fileRaw) {
+      this.handleFile();
+    }
+  };
 
   cleanErrors = () => {
     this.setState({
@@ -72,15 +78,8 @@ class Send extends Component {
     }
   };
 
-  handleFile = event => {
-    // TODO: change this to a more clean, elegant solution
-    let fileObject = null;
-    try {
-      fileObject = event.target.files[0];
-    } catch {
-      fileObject = this.fileInput.current.files[0];
-    }
-
+  handleFile = () => {
+    let fileObject = this.state.fileRaw;
     let fileName = fileObject.name;
     const fileSize = fileObject.size;
     if (fileSize > 10485760) {
@@ -166,8 +165,7 @@ class Send extends Component {
           onDragOver={event => event.preventDefault()}
           onDrop={event => {
             event.preventDefault();
-            this.fileInput.current = event.dataTransfer;
-            this.handleFile();
+            this.setState({ fileRaw: event.dataTransfer.files[0] });
           }}
           className={classes.textBox}
         >
@@ -192,8 +190,9 @@ class Send extends Component {
                   hidden
                   accept="image/png|image/jpg|image/jpeg|image/gif"
                   type="file"
-                  ref={this.fileInput}
-                  onChange={this.handleFile}
+                  onChange={event => {
+                    this.setState({ fileRaw: event.target.files[0] });
+                  }}
                 />
                 <ImageIcon />
               </IconButton>
