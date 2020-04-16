@@ -36,6 +36,7 @@ const styles = theme => ({
   },
   message: {
     whiteSpace: "pre-line",
+    overflowWrap: "anywhere",
     "& blockquote": {
       margin: 0,
       color: "#22BA6D"
