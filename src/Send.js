@@ -38,7 +38,7 @@ class Send extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (this.state.fileRaw != prevState.fileRaw) {
+    if (this.state.fileRaw !== prevState.fileRaw) {
       this.handleFile();
     }
   };
@@ -149,11 +149,7 @@ class Send extends Component {
           this.setState({ postSent: false });
         });
     } else {
-      this.setState({
-        error: true,
-        helperText: "File is required for posting.",
-        buttonDisabled: true
-      });
+      this.messagePost();
     }
   };
 

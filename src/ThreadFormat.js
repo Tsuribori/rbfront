@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
 import Divider from "@material-ui/core/Divider";
 import Card from "@material-ui/core/Card";
@@ -75,14 +75,16 @@ function ThreadFormat(props) {
             <Card elevation={0} square={true}>
               <Grid container>
                 <Grid item>
-                  <CardMedia
-                    className={classes.thumbnail}
-                    image={message.media.thumbnail}
-                    onClick={() => {
-                      setMedia(message.media);
-                      setLightbox(true);
-                    }}
-                  />
+                  {message.media && (
+                    <CardMedia
+                      className={classes.thumbnail}
+                      image={message.media.thumbnail}
+                      onClick={() => {
+                        setMedia(message.media);
+                        setLightbox(true);
+                      }}
+                    />
+                  )}
                 </Grid>
                 <Grid item>
                   <CardContent>
