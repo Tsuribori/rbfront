@@ -74,8 +74,8 @@ function ThreadFormat(props) {
           <React.Fragment key={message.id}>
             <Card elevation={0} square={true}>
               <Grid container>
-                <Grid item>
-                  {message.media && (
+                {message.media && (
+                  <Grid item>
                     <CardMedia
                       className={classes.thumbnail}
                       image={message.media.thumbnail}
@@ -84,8 +84,8 @@ function ThreadFormat(props) {
                         setLightbox(true);
                       }}
                     />
-                  )}
-                </Grid>
+                  </Grid>
+                )}
                 <Grid item>
                   <CardContent>
                     <Typography variant="caption" component="p">
