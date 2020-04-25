@@ -10,7 +10,13 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { ThemeProvider } from "@material-ui/styles";
 import { withStyles } from "@material-ui/core/styles";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from "react-router-dom";
 import DocumentTitle from "react-document-title";
 
 import { Theme, DarkTheme } from "./Theme.js";
@@ -102,7 +108,8 @@ class Base extends Component {
                 <Route path="/public" component={Public} />
                 <Route path="/privacy" component={Privacy} />
                 <Route path="/thread/:threadId" component={Thread} />
-                <Route component={NotFound} />
+                <Route path="/404" component={NotFound} />
+                <Redirect to="/404" />
               </Switch>
             </Router>
           </CssBaseline>
