@@ -70,10 +70,10 @@ function ThreadFormat(props) {
             </Tooltip>
           )}
         </div>
-        {thread.messages.map(message => (
+        {thread.messages.map((message, index) => (
           <React.Fragment key={message.id}>
             <Card elevation={0} square={true}>
-              <Grid container>
+              <Grid container direction="row">
                 {message.media && (
                   <Grid item>
                     <CardMedia
@@ -92,6 +92,9 @@ function ThreadFormat(props) {
                       <Moment format="YYYY-MM-DD HH:mm:ss">
                         {message.date}
                       </Moment>
+                    </Typography>
+                    <Typography variant="caption" component="p">
+                      No. {index}
                     </Typography>
                   </CardContent>
                 </Grid>
